@@ -9,7 +9,7 @@ import downArrow from "../assets/svg/down-arrow.svg";
 import { formatLocalDate, priorities, sections, trimName } from "../utils";
 import { updateTask } from "../features/task/taskSlice";
 import Loading from "./Loading";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 const TaskExcerpt = ({
   task,
@@ -146,7 +146,9 @@ const TaskExcerpt = ({
           )}
         </div>
       </div>
-      <div className="taskExcerpt__header">{task.title}</div>
+      <div title={task?.title} className="taskExcerpt__header">
+        {task?.title}
+      </div>
       <div className="taskExcerpt__checklist">
         <div className="taskExcerpt__checklist__header">
           <label htmlFor="checklist">

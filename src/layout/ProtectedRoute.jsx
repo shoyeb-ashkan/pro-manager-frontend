@@ -75,6 +75,17 @@ const ProtectedRoute = ({ children }) => {
             <img src={logout} alt="logout" />
             Logout
           </button>
+
+          <div className="created__by">
+            Created By{" "}
+            <a
+              href="https://shoyeb-ashkan.netlify.app/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Shoyeb Ashkan
+            </a>
+          </div>
         </div>
       </section>
       <section className="main__content">{children}</section>

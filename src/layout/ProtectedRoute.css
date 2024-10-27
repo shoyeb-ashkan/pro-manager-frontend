@@ -1,9 +1,8 @@
-
 .protected-route {
   position: relative;
   display: grid;
   grid-template-columns: 200px 1fr;
-  min-height: 100vh; 
+  min-height: 100vh;
 }
 
 .sidebar {
@@ -81,7 +80,27 @@
   padding: 26px 0 0 26px;
   height: 100%;
   overflow-x: auto;
-  overflow-y: hidden; 
+  overflow-y: hidden;
   box-sizing: border-box;
-  white-space: nowrap; 
+  white-space: nowrap;
+}
+
+.created__by {
+  position: absolute;
+  bottom: 8px;
+  left: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #707070;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.created__by a {
+  color: #707070;
+  text-decoration: none;
+  font-style: italic;
+  font-size: 12px;
+  font-weight: 700;
 }
