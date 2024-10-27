@@ -48,6 +48,22 @@ const AddEditTask = ({
   const checkedItemsCount = data.checklist.filter(
     (item) => item.checked
   ).length;
+
+  const userListRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userListRef.current && !userListRef.current.contains(event.target)) {
+        setShowUserList(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   useEffect(() => {
     const handler = setTimeout(async () => {
       if (!search) {
@@ -58,7 +74,7 @@ const AddEditTask = ({
 
       lastSearchRef.current = search;
       setLoadingUser(true);
-
+      setShowUserList(true);
       try {
         const { success, data, message } = await searchUser(search);
 
@@ -275,7 +291,7 @@ const AddEditTask = ({
                 )}
               </div>
               {showUserList && (
-                <div className="assignee__container">
+                <div ref={userListRef} className="assignee__container">
                   {searchUserResults.length === 0 &&
                     !loadingUser &&
                     !!search && (
@@ -293,7 +309,7 @@ const AddEditTask = ({
                         <UserSearchExcerpt user={user} />
                         <button
                           disabled={
-                            task.assignTo.includes(user._id) ||
+                            task?.assignTo?.includes(user._id) ||
                             data.assignTo === user._id
                           }
                           onClick={(e) => {
@@ -301,7 +317,7 @@ const AddEditTask = ({
                             handleAssigneeSelect(user);
                           }}
                         >
-                          {task.assignTo.includes(user._id) ||
+                          {task?.assignTo?.includes(user._id) ||
                           data.assignTo === user._id
                             ? "Assigned"
                             : "Assign"}
