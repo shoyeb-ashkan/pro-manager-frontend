@@ -13,7 +13,7 @@ const Analytics = () => {
     },
     priority: {
       "Low Priority": tasks.filter((task) => task.priority === "low").length,
-      "Medium Priority": tasks.filter((task) => task.priority === "medium")
+      "Medium Priority": tasks.filter((task) => task.priority === "moderate")
         .length,
       "High Priority": tasks.filter((task) => task.priority === "high").length,
       "Due Date Tasks": tasks.filter((task) => !task.dueDate).length,
