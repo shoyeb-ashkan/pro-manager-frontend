@@ -112,9 +112,9 @@ const TaskExcerpt = ({
           />
           {taskPriority.name}
 
-          {task.createdBy === user?._id && (
+          {task.createdBy !== user?._id && (
             <div className="taskExcerpt__user__avatar">
-              {trimName(user.name)}
+              {trimName(user?.name)}
             </div>
           )}
         </div>
