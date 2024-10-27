@@ -22,10 +22,8 @@ const TaskOverview = () => {
           setTask(data);
         } else {
           toast.error(message);
+          navigate("/404");
         }
-      } catch (error) {
-        toast.error("error fetching data!");
-        navigate("/404");
       } finally {
         setLoading(false);
       }
