@@ -111,6 +111,7 @@ button:hover {
 /* Styles for screens 12 inches and above */
 @media (min-width: 1000px) {
   .AuthLayout {
+    min-height: 400px;
     display: grid;
     grid-template-columns: 1fr 670px;
   }
@@ -126,7 +127,7 @@ button:hover {
   .side-content {
     display: flex;
     background-color: #17a2b8;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     flex-direction: column;
     justify-content: center;
