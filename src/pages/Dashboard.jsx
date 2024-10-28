@@ -19,9 +19,10 @@ import TaskExcerpt from "../components/TaskExcerpt";
 import toast from "react-hot-toast";
 import Delete from "../components/LogoutDelete";
 import AddPeople from "../components/AddPeople";
+import Loading from "../components/Loading";
 
 const Dashboard = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user, loading: loadingUser } = useSelector((state) => state.user);
   const { taskRange, tasks, error, success, loading } = useSelector(
     (state) => state.task
   );
@@ -92,7 +93,12 @@ const Dashboard = () => {
     <div className="dashboard__container">
       <div className=" dashboard__header">
         <div className="dashboard__header__top">
-          <span>Welcome! {user && user.name}</span>{" "}
+          <span className="dashboard__header__top__name">
+            Welcome!{" "}
+            <p className="dashboard__loading">
+              {loadingUser ? <Loading /> : user && user?.name}
+            </p>
+          </span>{" "}
           <span className="dashboad__header__date">{formatLocalDate()}</span>
         </div>
         <div className="dashboard__header__bottom">

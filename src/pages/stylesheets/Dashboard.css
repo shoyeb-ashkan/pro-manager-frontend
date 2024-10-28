@@ -23,7 +23,14 @@
   justify-content: space-between;
 }
 
-.dashboad__header__date {
+.dashboard__header__top__name {
+  text-transform: capitalize;
+  display: flex;
+  align-items: top;
+  gap: 10px;
+}
+
+.dashboard__header__top__name > p > .dashboad__header__date {
   font-size: 17px;
   font-weight: 500;
   line-height: 30px;
@@ -115,18 +122,25 @@
   line-height: 24px;
   text-align: left;
 }
+
 .dashboard__section__header__buttons {
   display: flex;
   align-items: center;
   gap: 15px;
 }
+
 .dashboard__section__header__buttons > button {
   width: 18px;
   border: none;
 }
+
 .task__container {
   min-height: 200px;
   max-height: calc(100vh - 280px);
   overflow-y: auto;
   border-radius: 5px;
+}
+
+.dashboard__loading .loader {
+  color: #17a2b8;
 }

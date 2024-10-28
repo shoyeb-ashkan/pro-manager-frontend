@@ -50,10 +50,16 @@ const AddEditTask = ({
   ).length;
 
   const userListRef = useRef(null);
+  const toggleButtonRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (userListRef.current && !userListRef.current.contains(event.target)) {
+      if (
+        userListRef.current &&
+        !userListRef.current.contains(event.target) &&
+        toggleButtonRef.current &&
+        !toggleButtonRef.current.contains(event.target)
+      ) {
         setShowUserList(false);
       }
     };
@@ -280,6 +286,7 @@ const AddEditTask = ({
                 />
                 {search && (
                   <button
+                    ref={toggleButtonRef}
                     title="show/hide userlist"
                     onClick={() => setShowUserList(!showUserList)}
                   >
@@ -306,22 +313,26 @@ const AddEditTask = ({
                     !loadingUser &&
                     searchUserResults.map((user) => (
                       <div key={user._id} className="assignee__search__user">
-                        <UserSearchExcerpt user={user} />
-                        <button
-                          disabled={
-                            task?.assignTo?.includes(user._id) ||
+                        <div className="assignee__search__user__avatar">
+                          <UserSearchExcerpt user={user} />
+                        </div>
+                        <div className="assignee__search__user__buttons">
+                          <button
+                            disabled={
+                              task?.assignTo?.includes(user._id) ||
+                              data.assignTo === user._id
+                            }
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleAssigneeSelect(user);
+                            }}
+                          >
+                            {task?.assignTo?.includes(user._id) ||
                             data.assignTo === user._id
-                          }
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleAssigneeSelect(user);
-                          }}
-                        >
-                          {task?.assignTo?.includes(user._id) ||
-                          data.assignTo === user._id
-                            ? "Assigned"
-                            : "Assign"}
-                        </button>
+                              ? "Assigned"
+                              : "Assign"}
+                          </button>
+                        </div>
                       </div>
                     ))}
                 </div>

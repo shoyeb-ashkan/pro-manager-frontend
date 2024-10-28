@@ -21,10 +21,15 @@ const AddPeople = ({ setShow }) => {
   const [loadingUser, setLoadingUser] = useState(false);
   const lastSearchRef = useRef("");
   const userListRef = useRef(null);
-
+  const toggleButtonRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (userListRef.current && !userListRef.current.contains(event.target)) {
+      if (
+        userListRef.current &&
+        !userListRef.current.contains(event.target) &&
+        toggleButtonRef.current &&
+        !toggleButtonRef.current.contains(event.target)
+      ) {
         setShowUserList(false);
       }
     };
@@ -109,6 +114,7 @@ const AddPeople = ({ setShow }) => {
 
               {search && (
                 <button
+                  ref={toggleButtonRef}
                   title="show/hide userlist"
                   onClick={() => {
                     setShowUserList(!showUserList);

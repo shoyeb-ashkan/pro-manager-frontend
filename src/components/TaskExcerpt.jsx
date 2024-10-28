@@ -1,5 +1,5 @@
 import "./styles/TaskExcerpt.css";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import dots from "../assets/svg/dot.svg";
@@ -164,8 +164,12 @@ const TaskExcerpt = ({
           </button>
         </div>
 
-        {showChecklist && (
-          <div className="taskExcerpt__checklist__items">
+        {/* {showChecklist && ( */}
+          <div
+            className={`taskExcerpt__checklist__items ${
+              showChecklist ? "taskExcerpt__checklist__items--expanded" : ""
+            }`}
+          >
             {task.checklist.map((item) => {
               return (
                 <div
@@ -184,7 +188,7 @@ const TaskExcerpt = ({
               );
             })}
           </div>
-        )}
+        {/* )} */}
       </div>
       <div className="taskExcerpt__bottom">
         <div>

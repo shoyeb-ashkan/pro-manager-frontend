@@ -139,31 +139,38 @@
 }
 
 .assignee__search__user {
-  display: flex;
-  border-radius: 7px;
-  margin: 2px 4px 2px 4px;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 25px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  width: 100%;
+  padding-right: 15px;
+  box-sizing: border-box;
 }
 .assignee__search__user:hover {
   background-color: #f5f5f5;
 }
-.assignee__search__user > button {
+
+.assignee__search__user__avatar {
+  display: flex;
+  align-items: center;
+}
+.assignee__search__user__buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.assignee__search__user__buttons > button {
   background-color: transparent;
   color: #17a2b8;
   border: 1px solid #17a2b8;
   border-radius: 7px;
   padding: 3px 25px;
 }
-.assignee__search__user > button:disabled {
+.assignee__search__user__buttons > button:disabled {
   color: #767575 !important;
   border-color: #767575 !important;
 }
-.assignee__search__user > button:hover {
-  color: #17a2b8;
-  border-color: #17a2b8;
-}
+
 /* from here onwards, styles for checklist */
 .addTask__box__checklist {
   display: flex;
