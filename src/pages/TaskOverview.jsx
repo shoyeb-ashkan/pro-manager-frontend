@@ -63,7 +63,7 @@ const TaskOverview = () => {
 
             <div className="task-overview__main__checklist">
               <div className="task-overview__main__checklist__header">
-                <label htmlFor="checklist">
+                <label>
                   Checklist{" "}
                   <span>{`(${checkedItemsCount}/${totalChecklistItems})`}</span>
                 </label>

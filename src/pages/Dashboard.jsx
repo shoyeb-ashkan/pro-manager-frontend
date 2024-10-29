@@ -4,8 +4,6 @@ import "./stylesheets/Dashboard.css";
 import { formatLocalDate, sections } from "../utils";
 
 import people from "../assets/svg/people.svg";
-import collapse from "../assets/svg/collapse-all.svg";
-import addTask from "../assets/svg/addTask.svg";
 
 import {
   backToDefault,
@@ -15,24 +13,18 @@ import {
   updateTask,
 } from "../features/task/taskSlice";
 import AddEditTask from "./../components/AddEditTask";
-import TaskExcerpt from "../components/TaskExcerpt";
 import toast from "react-hot-toast";
 import Delete from "../components/LogoutDelete";
 import AddPeople from "../components/AddPeople";
 import Loading from "../components/Loading";
+import TaskSection from "../components/TaskSection";
 
 const Dashboard = () => {
   const { user, loading: loadingUser } = useSelector((state) => state.user);
-  const { taskRange, tasks, error, success, loading } = useSelector(
+  const { taskRange, error, success, loading } = useSelector(
     (state) => state.task
   );
 
-  const [collapseAll, setCollapseAll] = useState({
-    backlog: false,
-    "in-progress": false,
-    "to-do": false,
-    done: false,
-  });
   const [showAddPeople, setShowAddPeople] = useState(false);
   const [isAddEditTaskShown, setIsAddEditTaskShown] = useState(false);
   const [showDeleteTask, setShowDeleteTask] = useState(false);
@@ -47,13 +39,6 @@ const Dashboard = () => {
     } else {
       await dispatch(updateTask({ taskId: task._id, formData: { ...data } }));
     }
-  };
-
-  const handleCollapseAll = (section) => {
-    setCollapseAll((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
   };
 
   useEffect(() => {
@@ -84,10 +69,6 @@ const Dashboard = () => {
     dispatch(deleteTask(task._id));
   };
 
-  //getting sorted tasks from backed just adding final check
-  const sortedTasks =
-    tasks && [...tasks].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
   // console.log("Current tasks:", tasks);
   return (
     <div className="dashboard__container">
@@ -95,9 +76,9 @@ const Dashboard = () => {
         <div className="dashboard__header__top">
           <span className="dashboard__header__top__name">
             Welcome!{" "}
-            <p className="dashboard__loading">
+            <span className="dashboard__loading">
               {loadingUser ? <Loading /> : user && user?.name}
-            </p>
+            </span>
           </span>{" "}
           <span className="dashboad__header__date">{formatLocalDate()}</span>
         </div>
@@ -120,52 +101,12 @@ const Dashboard = () => {
       </div>
 
       <div className="dashboard__main">
-        {sections.map((section) => (
-          <div className="dashboard__section" key={section.name}>
-            <div className="dashboard__section__header">
-              <p>{section.name}</p>{" "}
-              <div className="dashboard__section__header__buttons">
-                {section.value === "to-do" && (
-                  <button
-                    title="add task"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsAddEditTaskShown(true);
-                    }}
-                  >
-                    <img src={addTask} alt="add-task" />
-                  </button>
-                )}
-                <button
-                  title="Collapse all"
-                  onClick={() => handleCollapseAll(section.value)}
-                >
-                  <img src={collapse} alt="collapse" />
-                </button>
-              </div>
-            </div>
-            <div className="task__container">
-              {sortedTasks &&
-                sortedTasks.length > 0 &&
-                sortedTasks
-                  .filter((task) => task.status === section.value)
-                  .map((task) => {
-                    return (
-                      <div key={task._id}>
-                        <TaskExcerpt
-                          task={task}
-                          setMode={setMode}
-                          setTask={setTask}
-                          setIsAddEditTaskShown={setIsAddEditTaskShown}
-                          collapseAll={collapseAll[section.value]}
-                          setShowDeleteTask={setShowDeleteTask}
-                        />
-                      </div>
-                    );
-                  })}
-            </div>
-          </div>
-        ))}
+        <TaskSection
+          setIsAddEditTaskShown={setIsAddEditTaskShown}
+          setMode={setMode}
+          setTask={setTask}
+          setShowDeleteTask={setShowDeleteTask}
+        />
       </div>
       {isAddEditTaskShown && (
         <AddEditTask

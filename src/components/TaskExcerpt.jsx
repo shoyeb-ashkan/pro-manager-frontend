@@ -151,7 +151,7 @@ const TaskExcerpt = ({
       </div>
       <div className="taskExcerpt__checklist">
         <div className="taskExcerpt__checklist__header">
-          <label htmlFor="checklist">
+          <label>
             Checklist{" "}
             <span>{`(${checkedItemsCount}/${totalChecklistItems})`}</span>
           </label>

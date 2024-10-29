@@ -1,15 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { formatLocalDate, priorities } from "../utils";
-import "./styles/AddTask.css";
+import "./styles/AddEditTask.css";
 import deleteIcon from "../assets/svg/delete.svg";
-import { searchUser } from "../utils/axiosRequest";
 import Loading from "./Loading";
 import toast from "react-hot-toast";
 import UserSearchExcerpt from "./UserSearchExcerpt";
-import uparrow from "../assets/svg/up-arrow.svg";
-import downarrow from "../assets/svg/down-arrow.svg";
 import Calendar from "./Calendar";
 import { useSelector } from "react-redux";
+import Search from "./Search";
 
 const AddEditTask = ({
   task = null,
@@ -29,11 +27,6 @@ const AddEditTask = ({
 
   const originalData = { ...task };
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [search, setSearch] = useState("");
-  const [loadingUser, setLoadingUser] = useState(false);
-  const [searchUserResults, setSearchUserResults] = useState([]);
-  const [showUserList, setShowUserList] = useState(false);
-  const lastSearchRef = useRef("");
   const generateUniqueId = () => {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   };
@@ -49,62 +42,8 @@ const AddEditTask = ({
     (item) => item.checked
   ).length;
 
-  const userListRef = useRef(null);
-  const toggleButtonRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        userListRef.current &&
-        !userListRef.current.contains(event.target) &&
-        toggleButtonRef.current &&
-        !toggleButtonRef.current.contains(event.target)
-      ) {
-        setShowUserList(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handler = setTimeout(async () => {
-      if (!search) {
-        setSearchUserResults([]);
-        setShowUserList(false);
-        return;
-      }
-
-      lastSearchRef.current = search;
-      setLoadingUser(true);
-      setShowUserList(true);
-      try {
-        const { success, data, message } = await searchUser(search);
-
-        if (success) {
-          setSearchUserResults(data);
-        } else {
-          toast.error(message);
-        }
-      } finally {
-        setLoadingUser(false);
-      }
-    }, 800);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [search]);
-
-  const handleAssigneeSelect = (user) => {
-    if (user.email !== lastSearchRef.current) {
-      setData((prev) => ({ ...prev, assignTo: user._id }));
-      setSearchUserResults([]);
-      setSearch(user.email);
-    }
+  const handleSetAssignee = (user) => {
+    setData((prev) => ({ ...prev, assignTo: user._id }));
   };
 
   const handleAddNewItem = () => {
@@ -215,13 +154,14 @@ const AddEditTask = ({
     }
   };
   return (
-    <div className="addTask__container">
-      <div className="addTask__box">
-        <div className="addTask__box__title">
+    <div className="add-edit__container">
+      <div className="add-edit__box">
+        <div className="add-edit__box__title">
           <label htmlFor="title">
             Title <span className="required">*</span>
           </label>
           <input
+            name="title"
             className={formErrors.title ? "task__error" : ""}
             id="title"
             type="text"
@@ -233,11 +173,11 @@ const AddEditTask = ({
           />
         </div>
 
-        <div className="addTask__box__priority">
-          <label htmlFor="priority">
+        <div className="add-edit__box__priority">
+          <label>
             Priority <span className="required">*</span>
           </label>
-          <div className="addTask__priority__button__container">
+          <div className="add-edit__priority__button__container">
             {priorities.map((priority) => (
               <button
                 key={priority.value}
@@ -252,10 +192,10 @@ const AddEditTask = ({
                     ? { background: "#EEECEC" }
                     : {}
                 }
-                className="addTask__priority__button"
+                className="add-edit__priority__button"
               >
                 <div
-                  className="addTask__priority__color"
+                  className="add-edit__priority__color"
                   style={{ backgroundColor: priority.color }}
                 ></div>
                 {priority.name}
@@ -264,90 +204,26 @@ const AddEditTask = ({
           </div>
         </div>
 
-        <div className="addTask__box__assignee">
-          <label htmlFor="assignee">Assign to</label>
+        <div className="add-edit__box__assignee">
+          <label>Assign to</label>
           {!!task &&
           (task?.assignTo?.includes(user._id) ||
             !task?.createdBy === user._id) ? (
             <UserSearchExcerpt user={user} />
           ) : (
-            <div className="addTask__box__assignee__container">
-              <div className="assignee__container__input">
-                <input
-                  type="text"
-                  placeholder="Search for an assignee"
-                  value={search}
-                  onChange={(e) => {
-                    if (e.target.value.trim() === "") {
-                      setData((prev) => ({ ...prev, assignTo: "" }));
-                    }
-                    setSearch(e.target.value);
-                  }}
-                />
-                {search && (
-                  <button
-                    ref={toggleButtonRef}
-                    title="show/hide userlist"
-                    onClick={() => setShowUserList(!showUserList)}
-                  >
-                    <img
-                      src={!showUserList ? downarrow : uparrow}
-                      alt="show userlist"
-                    />
-                  </button>
-                )}
-              </div>
-              {showUserList && (
-                <div ref={userListRef} className="assignee__container">
-                  {searchUserResults.length === 0 &&
-                    !loadingUser &&
-                    !!search && (
-                      <p style={{ padding: "4px" }}>No user found!</p>
-                    )}
-                  {loadingUser && (
-                    <span>
-                      <Loading />
-                    </span>
-                  )}
-                  {searchUserResults.length > 0 &&
-                    !loadingUser &&
-                    searchUserResults.map((user) => (
-                      <div key={user._id} className="assignee__search__user">
-                        <div className="assignee__search__user__avatar">
-                          <UserSearchExcerpt user={user} />
-                        </div>
-                        <div className="assignee__search__user__buttons">
-                          <button
-                            disabled={
-                              task?.assignTo?.includes(user._id) ||
-                              data.assignTo === user._id
-                            }
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleAssigneeSelect(user);
-                            }}
-                          >
-                            {task?.assignTo?.includes(user._id) ||
-                            data.assignTo === user._id
-                              ? "Assigned"
-                              : "Assign"}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              )}
+            <div className="add-edit__box__assignee__container">
+              <Search setUser={handleSetAssignee} task={task} data={data} />
             </div>
           )}
         </div>
 
-        <div className="addTask__box__checklist">
-          <label htmlFor="checklist">
+        <div className="add-edit__box__checklist">
+          <label>
             Checklist{" "}
             <span>{`(${checkedItemsCount}/${totalChecklistItems})`}</span>
             <span className="required">*</span>
           </label>
-          <div className="addTask__box__checklist__container">
+          <div className="add-edit__box__checklist__container">
             <div className="checklist__items">
               {data.checklist.map((item) => (
                 <div className="checklist__item" key={item.itemId}>
@@ -380,12 +256,12 @@ const AddEditTask = ({
           </div>
         </div>
 
-        <div className="addTask__box__bottom">
+        <div className="add-edit__box__bottom">
           {showDatePicker && (
             <Calendar selectedDate={data.dueDate} onChange={handleDateChange} />
           )}
           <button
-            className="addTask__bottom__dueDate"
+            className="add-edit__bottom__dueDate"
             onClick={() => setShowDatePicker(!showDatePicker)}
           >
             {data.dueDate
@@ -393,9 +269,9 @@ const AddEditTask = ({
               : "Select Due Date"}
           </button>
 
-          <div className="addTask__bottom__button">
+          <div className="add-edit__bottom__button">
             <button
-              className="addTask__bottom__button__cancel"
+              className="add-edit__bottom__button__cancel"
               onClick={() => setIsShown(false)}
             >
               Cancel
@@ -405,7 +281,7 @@ const AddEditTask = ({
               onClick={(e) => {
                 handleSubmitForm(e);
               }}
-              className="addTask__bottom__button__save"
+              className="add-edit__bottom__button__save"
             >
               {loading ? <Loading /> : "Save"}
             </button>

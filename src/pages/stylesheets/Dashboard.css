@@ -97,50 +97,6 @@
   margin-bottom: 4px;
 }
 
-.dashboard__section {
-  width: 360px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  background: #eef2f5;
-}
-
-.dashboard__section__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.dashboard__section__header > p {
-  text-transform: capitalize;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  text-align: left;
-}
-
-.dashboard__section__header__buttons {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.dashboard__section__header__buttons > button {
-  width: 18px;
-  border: none;
-}
-
-.task__container {
-  min-height: 200px;
-  max-height: calc(100vh - 280px);
-  overflow-y: auto;
-  border-radius: 5px;
-}
-
 .dashboard__loading .loader {
   color: #17a2b8;
 }
