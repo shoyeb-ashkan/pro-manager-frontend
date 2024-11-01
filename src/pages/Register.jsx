@@ -1,11 +1,13 @@
 import Form from "./../components/Form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { registerUser, resetError } from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, success, error } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     name: "",
@@ -73,15 +75,17 @@ const Register = () => {
     return isValid;
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    validateField(name, value);
+  };
+
   const formFields = [
     {
       name: "name",
       value: formData.name,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, name: value });
-        validateField("name", value);
-      },
+      onChange: handleChange,
       type: "text",
       placeholder: "Name",
       require: true,
@@ -89,11 +93,7 @@ const Register = () => {
     {
       name: "email",
       value: formData.email,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, email: value });
-        validateField("email", value);
-      },
+      onChange: handleChange,
       type: "email",
       placeholder: "Email",
       require: true,
@@ -101,11 +101,7 @@ const Register = () => {
     {
       name: "password",
       value: formData.password,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, password: value });
-        validateField("password", value);
-      },
+      onChange: handleChange,
       type: "password",
       placeholder: "Password",
       require: true,
@@ -113,11 +109,7 @@ const Register = () => {
     {
       name: "confirmPassword",
       value: formData.confirmPassword,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, confirmPassword: value });
-        validateField("confirmPassword", value);
-      },
+      onChange: handleChange,
       type: "password",
       placeholder: "Confirm password",
       require: true,
@@ -141,7 +133,15 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (success) return alert(success);
+    if (success) {
+      toast.success("Registration successful!");
+      navigate("/");
+      dispatch(resetError());
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(resetError());
+    }
   }, [error, loading, success]);
 
   return (

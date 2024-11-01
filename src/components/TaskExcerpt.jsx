@@ -203,7 +203,7 @@ const TaskExcerpt = ({
                   : ""
               }`}
             >
-              {formatLocalDate(task.dueDate, " MMM dd")}
+              {formatLocalDate(task.dueDate, " MMM ddth")}
             </span>
           )}
         </div>

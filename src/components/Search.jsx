@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./styles/Search.css";
-import UserSearchExcerpt from "./UserSearchExcerpt";
+
 import uparrow from "../assets/svg/up-arrow.svg";
 import downarrow from "../assets/svg/down-arrow.svg";
 import Loading from "./Loading";
+
+import UserSearchExcerpt from "./UserSearchExcerpt";
 import { searchUser } from "../utils/axiosRequest";
-import toast from "react-hot-toast";
 
 const Search = ({ setUser, task = null, data }) => {
   const [search, setSearch] = useState("");
@@ -13,21 +15,22 @@ const Search = ({ setUser, task = null, data }) => {
   const [loadingUser, setLoadingUser] = useState(false);
   const [searchUserResults, setSearchUserResults] = useState([]);
   const lastSearchRef = useRef("");
+
   const toggleButtonRef = useRef(null);
   const userListRef = useRef(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        userListRef.current &&
-        !userListRef.current.contains(event.target) &&
-        toggleButtonRef.current &&
-        !toggleButtonRef.current.contains(event.target)
-      ) {
-        setShowUserList(false);
-      }
-    };
+  const handleClickOutside = useCallback((event) => {
+    if (
+      userListRef.current &&
+      !userListRef.current.contains(event.target) &&
+      toggleButtonRef.current &&
+      !toggleButtonRef.current.contains(event.target)
+    ) {
+      setShowUserList(false);
+    }
+  }, []);
 
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -41,6 +44,8 @@ const Search = ({ setUser, task = null, data }) => {
         setShowUserList(false);
         return;
       }
+
+      if (lastSearchRef.current === search) return;
 
       lastSearchRef.current = search;
       setLoadingUser(true);
@@ -70,6 +75,15 @@ const Search = ({ setUser, task = null, data }) => {
       setSearch(user.email);
     }
   };
+
+  const isDisabled = (user) => {
+    return (
+      task?.assignTo?.includes(user._id) ||
+      data.assignTo === user._id ||
+      user.email === data?.email
+    );
+  };
+
   return (
     <div className="search__input__container">
       <input
@@ -116,11 +130,7 @@ const Search = ({ setUser, task = null, data }) => {
                 </div>
                 <div className="search__list__item__buttons">
                   <button
-                    disabled={
-                      task?.assignTo?.includes(user._id) ||
-                      data.assignTo === user._id ||
-                      user.email === data?.email
-                    }
+                    disabled={isDisabled(user)}
                     onClick={(e) => {
                       e.preventDefault();
                       handleSelect(user);

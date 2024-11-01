@@ -81,6 +81,30 @@
   overflow-y: auto;
   max-height: 400px;
 }
+.task-overview__checklist__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.task-overview__checklist__item input[type="checkbox"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+}
+.task-overview__checklist__item input[type="checkbox"]:checked {
+  accent-color: #17a2b8;
+}
+
+.task-overview__checklist__item span {
+  line-height: normal;
+  margin: 0;
+}
 
 .task-overview__main__dueDate {
   padding: 4px;
@@ -93,7 +117,7 @@
   text-align: left;
 }
 
-.task-overview__main__dueDate > span {
+.task-overview__main__dueDate span {
   margin-left: 10px;
   padding: 2px 6px;
   border-radius: 8px;

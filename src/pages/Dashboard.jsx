@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import "./stylesheets/Dashboard.css";
-import { formatLocalDate, sections } from "../utils";
+import { formatLocalDate } from "../utils";
 
 import people from "../assets/svg/people.svg";
 
@@ -13,7 +14,6 @@ import {
   updateTask,
 } from "../features/task/taskSlice";
 import AddEditTask from "./../components/AddEditTask";
-import toast from "react-hot-toast";
 import Delete from "../components/LogoutDelete";
 import AddPeople from "../components/AddPeople";
 import Loading from "../components/Loading";
@@ -33,7 +33,7 @@ const Dashboard = () => {
 
   const dispatch = useDispatch();
   // console.log(selectedRange);
-  const onCreateEditTaskSubmit = async (data) => {
+  const handleCreateEditTaskSubmit = async (data) => {
     if (mode === "create") {
       await dispatch(createTask(data));
     } else {
@@ -77,7 +77,7 @@ const Dashboard = () => {
           <span className="dashboard__header__top__name">
             Welcome!{" "}
             <span className="dashboard__loading">
-              {loadingUser ? <Loading /> : user && user?.name}
+              {loadingUser ? <Loading /> : user?.name}
             </span>
           </span>{" "}
           <span className="dashboad__header__date">{formatLocalDate()}</span>
@@ -111,7 +111,7 @@ const Dashboard = () => {
       {isAddEditTaskShown && (
         <AddEditTask
           mode={mode}
-          onsubmit={onCreateEditTaskSubmit}
+          onsubmit={handleCreateEditTaskSubmit}
           setIsShown={cancleTaskEdit}
           task={task}
         />

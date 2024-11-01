@@ -26,6 +26,7 @@ const Login = () => {
         "Password must be at least 8 characters and contain at least one letter and one number!",
     },
   });
+  
   // Function to check if a field is valid and update error state
   const validateField = (fieldName, value) => {
     let isValid = false;
@@ -64,15 +65,17 @@ const Login = () => {
     return isValid;
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    validateField(name, value);
+  };
+
   const formFields = [
     {
       name: "email",
       value: formData.email,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, email: value });
-        validateField("email", value);
-      },
+      onChange: handleChange,
       type: "email",
       placeholder: "Email",
       required: true,
@@ -80,11 +83,7 @@ const Login = () => {
     {
       name: "password",
       value: formData.password,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, password: value });
-        validateField("password", value);
-      },
+      onChange: handleChange,
       type: "password",
       placeholder: "Password",
       required: true,

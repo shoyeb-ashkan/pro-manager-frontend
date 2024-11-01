@@ -68,16 +68,15 @@ const TaskSection = ({
                 .filter((task) => task.status === section.value)
                 .map((task) => {
                   return (
-                    <div key={task._id}>
-                      <TaskExcerpt
-                        task={task}
-                        setMode={setMode}
-                        setTask={setTask}
-                        setIsAddEditTaskShown={setIsAddEditTaskShown}
-                        collapseAll={collapseAll[section.value]}
-                        setShowDeleteTask={setShowDeleteTask}
-                      />
-                    </div>
+                    <TaskExcerpt
+                      key={task._id}
+                      task={task}
+                      setMode={setMode}
+                      setTask={setTask}
+                      setIsAddEditTaskShown={setIsAddEditTaskShown}
+                      collapseAll={collapseAll[section.value]}
+                      setShowDeleteTask={setShowDeleteTask}
+                    />
                   );
                 })}
           </div>

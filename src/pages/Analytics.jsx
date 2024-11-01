@@ -1,24 +1,33 @@
+import { useMemo } from "react";
 import "./stylesheets/Analytics.css";
 import { useSelector } from "react-redux";
+import AnalyticsLoader from "../components/AnalyticsLoader";
 
 const Analytics = () => {
-  const { tasks } = useSelector((state) => state.task);
-  const analytics = {
-    tasks: {
-      "Backlog Tasks": tasks.filter((task) => task.status === "backlog").length,
-      "In-Progress Tasks": tasks.filter((task) => task.status === "in-progress")
-        .length,
-      "To-do Tasks": tasks.filter((task) => task.status === "to-do").length,
-      "Done Tasks": tasks.filter((task) => task.status === "done").length,
-    },
-    priority: {
-      "Low Priority": tasks.filter((task) => task.priority === "low").length,
-      "Medium Priority": tasks.filter((task) => task.priority === "moderate")
-        .length,
-      "High Priority": tasks.filter((task) => task.priority === "high").length,
-      "Due Date Tasks": tasks.filter((task) => !task.dueDate).length,
-    },
-  };
+  const { tasks, loading } = useSelector((state) => state.task);
+
+  const analytics = useMemo(
+    () => ({
+      tasks: {
+        "Backlog Tasks": tasks.filter((task) => task.status === "backlog")
+          .length,
+        "In-Progress Tasks": tasks.filter(
+          (task) => task.status === "in-progress"
+        ).length,
+        "To-do Tasks": tasks.filter((task) => task.status === "to-do").length,
+        "Done Tasks": tasks.filter((task) => task.status === "done").length,
+      },
+      priority: {
+        "Low Priority": tasks.filter((task) => task.priority === "low").length,
+        "Medium Priority": tasks.filter((task) => task.priority === "moderate")
+          .length,
+        "High Priority": tasks.filter((task) => task.priority === "high")
+          .length,
+        "Due Date Tasks": tasks.filter((task) => !task.dueDate).length,
+      },
+    }),
+    [tasks]
+  );
 
   return (
     <div className="analytics__container">
@@ -31,12 +40,20 @@ const Analytics = () => {
               {Object.keys(analytics[key]).map((item) => {
                 return (
                   <div className="analytics__main__item__container" key={item}>
-                    <div className="analytics__main__item">
-                      {" "}
-                      <div className="analytics__main__item__color" />
-                      {item}
-                    </div>
-                    <span>{String(analytics[key][item]).padStart(2, "0")}</span>
+                    {loading ? (
+                      <AnalyticsLoader />
+                    ) : (
+                      <>
+                        <div className="analytics__main__item">
+                          {" "}
+                          <div className="analytics__main__item__color" />
+                          {item}
+                        </div>
+                        <span>
+                          {String(analytics[key][item]).padStart(2, "0")}
+                        </span>
+                      </>
+                    )}
                   </div>
                 );
               })}

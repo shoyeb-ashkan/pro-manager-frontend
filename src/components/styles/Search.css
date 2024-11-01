@@ -75,7 +75,6 @@
 }
 
 .search__list__item__buttons > button:disabled {
-  cursor: unset;
   color: #767575 !important;
   border-color: #767575 !important;
 }

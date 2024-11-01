@@ -38,8 +38,6 @@ const TaskOverview = () => {
   const priority =
     task && priorities.find((priority) => priority.value === task.priority);
 
-  console.log(task.dueDate);
-
   return (
     <div className="task-overview__container">
       <div className="task-overview__header">
@@ -70,14 +68,20 @@ const TaskOverview = () => {
               </div>
 
               <div className="task-overview__main__checklist__items">
-                <div className="taskExcerpt__checklist__items">
+                <div className="task-overview__checklist__items">
                   {task?.checklist?.map((item) => {
                     return (
                       <div
                         key={`${item.itemId},${item.title}`}
-                        className="taskExcerpt__checklist__item"
+                        className="task-overview__checklist__item"
                       >
-                        <input type="checkbox" checked={item.checked} />
+                        <input
+                          type="checkbox"
+                          checked={item.checked}
+                          onChange={(e) => {
+                            e.preventDefault();
+                          }}
+                        />
                         <span>{item.text}</span>
                       </div>
                     );
@@ -88,7 +92,7 @@ const TaskOverview = () => {
             {task?.dueDate && (
               <div className="task-overview__main__dueDate">
                 Due Date
-                <span>{formatLocalDate(task?.dueDate, " MMM dd")}</span>
+                <span>{formatLocalDate(task?.dueDate, " MMM ddth")}</span>
               </div>
             )}
           </div>

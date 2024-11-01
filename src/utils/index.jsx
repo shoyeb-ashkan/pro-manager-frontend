@@ -16,6 +16,20 @@ export const useHandleLogout = () => {
   return handleLogout;
 };
 
+const getOrdinalSuffix = (day) => {
+  if (day > 3 && day < 21) return "th"; // for 11th - 20th
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+};
+
 export const formatLocalDate = (
   inputDate = new Date(),
   format = "dd MMM, yyyy"
@@ -35,7 +49,8 @@ export const formatLocalDate = (
     .replace("MMM", month)
     .replace("MM", numMonth)
     .replace("yyyy", year)
-    .replace("tt", time);
+    .replace("tt", time)
+    .replace("th", getOrdinalSuffix(day));
 };
 
 export const priorities = [

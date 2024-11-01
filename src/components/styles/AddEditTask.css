@@ -209,3 +209,9 @@
 input.task__error {
   border-color: red !important;
 }
+
+button:disabled {
+  padding-top: 2px;
+  cursor: unset !important;
+  background-color: #767575;
+}

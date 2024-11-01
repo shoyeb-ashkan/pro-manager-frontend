@@ -2,22 +2,21 @@ import { useEffect, useState } from "react";
 import "./stylesheets/Setting.css";
 import Form from "./../components/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserDetails } from "../features/user/userSlice";
+import { resetError, updateUserDetails } from "../features/user/userSlice";
 import { useHandleLogout } from "../utils";
 import toast from "react-hot-toast";
 
 const Settings = () => {
   const { user } = useSelector((state) => state.user);
-
   const handleLogout = useHandleLogout();
   const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    name: user?.name || "",
+    email: user?.email || "",
     password: "",
     newPassword: "",
   });
-
   const [formError, setFormError] = useState({
     name: false,
     email: false,
@@ -119,15 +118,17 @@ const Settings = () => {
     return isValid;
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    validateField(name, value);
+  };
+
   const formFields = [
     {
       name: "name",
       value: formData.name,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, name: value });
-        validateField("name", value);
-      },
+      onChange: handleChange,
       type: "text",
       placeholder: "Name",
       required: false,
@@ -135,11 +136,7 @@ const Settings = () => {
     {
       name: "email",
       value: formData.email,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, email: value });
-        validateField("email", value);
-      },
+      onChange: handleChange,
       type: "email",
       placeholder: "Email",
       required: false,
@@ -147,11 +144,7 @@ const Settings = () => {
     {
       name: "password",
       value: formData.password,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, password: value });
-        validateField("password", value);
-      },
+      onChange: handleChange,
       type: "password",
       placeholder: "Password",
       required: !!formData.newPassword,
@@ -159,11 +152,7 @@ const Settings = () => {
     {
       name: "newPassword",
       value: formData.newPassword,
-      onChange: (e) => {
-        const value = e.target.value;
-        setFormData({ ...formData, newPassword: value });
-        validateField("newPassword", value);
-      },
+      onChange: handleChange,
       type: "password",
       placeholder: "New Password",
       required: !!formData.password,
@@ -185,12 +174,30 @@ const Settings = () => {
     });
     if (isError) return;
 
-    let data = formData;
-    if (formData.email === user.email) {
-      data = { ...formData, email: "" };
-    }
+    const updatedData = {};
 
-    const result = await dispatch(updateUserDetails(data));
+    if (formData.name !== user.name) {
+      updatedData.name = formData.name;
+    }
+    if (formData.email !== user.email && formData.email !== "") {
+      updatedData.email = formData.email;
+    }
+    if (formData.password) {
+      updatedData.password = formData.password;
+    }
+    if (formData.newPassword) {
+      updatedData.newPassword = formData.newPassword;
+    }
+    if (Object.keys(updatedData).length === 0) {
+      toast("⚠️ Please make some changes first!", {
+        style: {
+          background: "#FFFACD",
+          color: "#333",
+        },
+      });
+      return;
+    }
+    const result = await dispatch(updateUserDetails(updatedData));
 
     if (result.type === "user/updateUserDetails/fulfilled") {
       toast.success("Profile updated successfully!");
@@ -199,6 +206,7 @@ const Settings = () => {
       }, 2000);
     } else {
       toast.error(result.payload.message || "Failed to update profile.");
+      dispatch(resetError());
     }
   };
 

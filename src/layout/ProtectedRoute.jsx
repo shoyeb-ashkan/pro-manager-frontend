@@ -1,16 +1,18 @@
 import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import "./ProtectedRoute.css";
+
 import codesandbox from "../assets/svg/codesandbox.svg";
 import database from "../assets/svg/database.svg";
 import layout from "../assets/svg/layout.svg";
 import settings from "../assets/svg/settings.svg";
 import logout from "../assets/svg/logout.svg";
-import { useDispatch, useSelector } from "react-redux";
+
 import { getUserDetails } from "../features/user/userSlice";
-import { useEffect, useState } from "react";
-import Logout from "../components/LogoutDelete";
-import { useHandleLogout } from "../utils";
 import { backToDefault, getTasks } from "../features/task/taskSlice";
+import { useHandleLogout } from "../utils";
+import Logout from "../components/LogoutDelete";
 
 const ProtectedRoute = ({ children }) => {
   const { taskRange } = useSelector((state) => state.task);

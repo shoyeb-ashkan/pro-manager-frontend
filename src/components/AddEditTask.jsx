@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import { formatLocalDate, priorities } from "../utils";
+import React, { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import "./styles/AddEditTask.css";
-import deleteIcon from "../assets/svg/delete.svg";
-import Loading from "./Loading";
 import toast from "react-hot-toast";
+
+import deleteIcon from "../assets/svg/delete.svg";
+
+import { formatLocalDate, priorities } from "../utils";
+import Loading from "./Loading";
 import UserSearchExcerpt from "./UserSearchExcerpt";
 import Calendar from "./Calendar";
-import { useSelector } from "react-redux";
 import Search from "./Search";
 
 const AddEditTask = ({
@@ -17,19 +19,18 @@ const AddEditTask = ({
 }) => {
   const { loading } = useSelector((state) => state.task);
   const { user } = useSelector((state) => state.user);
+
   const [data, setData] = useState({
     title: task?.title || "",
     priority: task?.priority || "",
     assignTo: task?.assignTo || "",
     checklist: task?.checklist || [],
-    dueDate: task?.dueDate || "",
+    dueDate: task?.dueDate || null,
   });
 
-  const originalData = { ...task };
+  const originalData = useMemo(() => ({ ...task }), [task]);
+
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const generateUniqueId = () => {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  };
   const [formErrors, setFormErrors] = useState({
     title: false,
     priority: false,
@@ -37,10 +38,18 @@ const AddEditTask = ({
     checklistIems: {},
   });
 
-  const totalChecklistItems = data.checklist.length;
-  const checkedItemsCount = data.checklist.filter(
-    (item) => item.checked
-  ).length;
+  const generateUniqueId = () => {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  };
+
+  const totalChecklistItems = useMemo(
+    () => data.checklist.length,
+    [data.checklist]
+  );
+  const checkedItemsCount = useMemo(
+    () => data.checklist.filter((item) => item.checked).length,
+    [data.checklist]
+  );
 
   const handleSetAssignee = (user) => {
     setData((prev) => ({ ...prev, assignTo: user._id }));
@@ -130,6 +139,9 @@ const AddEditTask = ({
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
+
+    //if validation is successful, and some data has changed, then send the data to backed :edit mode
+    // validate and send data to backend if successfully validated:creaet mode
     if (validatedata()) {
       const submissionData =
         mode === "create"
@@ -140,7 +152,6 @@ const AddEditTask = ({
               }
               return acc;
             }, {});
-
       if (JSON.stringify(submissionData) !== "{}") {
         onsubmit(submissionData);
       } else {
