@@ -223,7 +223,12 @@ const AddEditTask = ({
             <UserSearchExcerpt user={user} />
           ) : (
             <div className="add-edit__box__assignee__container">
-              <Search setUser={handleSetAssignee} task={task} data={data} />
+              <Search
+                setUser={handleSetAssignee}
+                task={task}
+                data={data}
+                btnText={"Assign"}
+              />
             </div>
           )}
         </div>

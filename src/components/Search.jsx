@@ -9,7 +9,7 @@ import Loading from "./Loading";
 import UserSearchExcerpt from "./UserSearchExcerpt";
 import { searchUser } from "../utils/axiosRequest";
 
-const Search = ({ setUser, task = null, data }) => {
+const Search = ({ setUser, task = null, data, btnText }) => {
   const [search, setSearch] = useState("");
   const [showUserList, setShowUserList] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
@@ -136,7 +136,7 @@ const Search = ({ setUser, task = null, data }) => {
                       handleSelect(user);
                     }}
                   >
-                    Assign
+                    {btnText}
                   </button>
                 </div>
               </div>

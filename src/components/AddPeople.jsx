@@ -39,7 +39,7 @@ const AddPeople = ({ setShow }) => {
               Add people to the board
             </div>
             <div className="add-people__input__container">
-              <Search setUser={handleSetUser} data={user} />
+              <Search setUser={handleSetUser} data={user} btnText={"Add"} />
             </div>
             <div className="add-people__container__buttons">
               <button
