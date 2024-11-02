@@ -9,8 +9,10 @@ const AuthLayout = ({ children }) => {
   return (
     <div className="AuthLayout">
       <div className="side-content">
-        <span className="background-circle" />
-        <img src={Art} alt="logo" />
+        <div className="image-container">
+          <span className="background-circle" />
+          <img src={Art} alt="logo" />
+        </div>
         <p>Welcome aboard my friend</p>
         <span>just a couple of clicks and we start</span>
       </div>

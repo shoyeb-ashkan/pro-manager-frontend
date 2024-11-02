@@ -135,6 +135,15 @@ button:hover {
     position: relative;
   }
 
+  .image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
+  }
+
   .background-circle {
     position: absolute;
     width: 300px;
@@ -142,7 +151,7 @@ button:hover {
     background-color: #317f8b;
     border-radius: 50%;
     z-index: 1;
-    top: 34%;
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
@@ -151,7 +160,6 @@ button:hover {
     position: relative;
     z-index: 2;
     max-width: 100%;
-    height: auto;
   }
 
   .side-content p {
