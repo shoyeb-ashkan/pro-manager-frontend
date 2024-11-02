@@ -202,8 +202,16 @@ const Settings = () => {
     if (result.type === "user/updateUserDetails/fulfilled") {
       toast.success("Profile updated successfully!");
       setTimeout(() => {
+        toast("Logging Out!", {
+          style: {
+            background: "#FFFACD",
+            color: "#333",
+          },
+        });
+      }, 300);
+      setTimeout(() => {
         handleLogout();
-      }, 2000);
+      }, 800);
     } else {
       toast.error(result.payload.message || "Failed to update profile.");
       dispatch(resetError());
